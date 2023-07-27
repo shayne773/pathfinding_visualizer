@@ -1,0 +1,15 @@
+.row-wrapper {
+    display: flex;
+}
+
+.grid-wrapper {
+    margin: auto;
+    max-width: 90%;
+    
+}
+
+
+h1 {
+    text-align: center;
+}
+
