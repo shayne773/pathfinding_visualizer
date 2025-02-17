@@ -1,13 +1,20 @@
 .row-wrapper {
     display: flex;
+    justify-content: center; 
+    align-items: center;  
+    width: 100%;
 }
 
 .grid-wrapper {
     margin: auto;
-    max-width: 90%;
-    
+    max-width: 100%;
+    display: flex;
+    justify-content: center; 
 }
 
+.path-find-container {
+    width: 100%
+}
 
 h1 {
     text-align: center;

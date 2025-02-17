@@ -22,8 +22,6 @@ function Astar(startNode, endNode){
         let current = open[leastIndex];
         visited.push(current);
 
-        console.log(visited);
-
         if(current === endNode){
             let temp = current;
             while(temp){
@@ -80,7 +78,12 @@ function Astar(startNode, endNode){
 
     }
 
-    return {path, error: "no path found"};
+    return {
+        path,
+        visited,
+        error: "no path found"
+    };
+        
 
 
 }

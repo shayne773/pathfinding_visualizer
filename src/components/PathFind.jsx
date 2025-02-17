@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import "./PathFind.css";
 import Node from "./Node.jsx";
 import Astar from "../astar_algorithm/astar";
+import Header from "./Header.jsx"
 
 const rows = 10;
 const cols = 35;
@@ -11,39 +12,26 @@ const NODE_END_X = cols-1;
 const NODE_END_Y = rows-1;
 
 const PathFind = () =>{
-
+    
     const [grid, setgrid] = useState([]);
     const [path, setpath] = useState([]);
     const [visited, setvisited] = useState([]);
+
     useEffect(()=>{createGrid();}, []);
 
     const createGrid = () =>{
-        const grid = new Array(rows);
-    
-        for(var i =0; i<rows; i++)
-        {
-            grid[i] = new Array(cols);
-        }
+        setvisited([])
+        setpath([])
+        setgrid([])
 
-        createSpot(grid);
-        setgrid(grid);
-        addNeighbors(grid);
-        const startNode = grid[NODE_START_Y][NODE_START_X];
-        const endNode = grid[NODE_END_Y][NODE_END_X];
-        let path = Astar(startNode, endNode);
-        setpath(path.path);
-        setvisited(path.visited);
-    }
+        const newGrid = new Array(rows).fill(null).map((_, i) => 
+            new Array(cols).fill(null).map((_, j) => new Spot(i, j)) 
+        );
 
-    const createSpot = (grid)=>{
 
-        for(var i=0; i<rows; i++)
-            {
-                for(var j=0; j<cols; j++)
-                {
-                    grid[i][j] = new Spot(i, j);
-                }
-            }
+        addNeighbors(newGrid); 
+        setgrid(newGrid); 
+        
     }
 
     const addNeighbors = (grid)=>{
@@ -94,55 +82,79 @@ const PathFind = () =>{
         <div>
             {grid.map((row, rowInd) => {
                 return (
-                    <div className='row-wrapper' key={rowInd}>
-                        {row.map((col, colInd) =>{
-                            const {isStart, isEnd, isWall} = col
-                            return <Node key={colInd} isWall={isWall} isStart={isStart} isEnd={isEnd} row={rowInd} col={colInd}/>
+                    <div className="row-wrapper" key={rowInd}>
+                        {row.map((col, colInd) => {
+                            const { isStart, isEnd, isWall } = col;
+                            const isVisited = visited.some(node => node && node.x === col.x && node.y === col.y);
+                            const isPath = path.some(node => node && node.x === col.x && node.y === col.y);
+                            
+                            return (
+                                <Node
+                                    key={colInd}
+                                    isWall={isWall}
+                                    isStart={isStart}
+                                    isEnd={isEnd}
+                                    isVisited={isVisited}
+                                    isPath={isPath}
+                                    row={rowInd}
+                                    col={colInd}
+                                />
+                            );
                         })}
                     </div>
                 );
             })}
         </div>
-    )
+    );
 
-    const visualizeShortestPath = (shortestPathNodes) =>{
-        
-        for(let i=0; i<shortestPathNodes.length; i++)
-        {
-            setTimeout(()=>{
-            let node = shortestPathNodes[i]
-            document.getElementById(`node-${node.y}-${node.x}`).className = "node node-shortest-path"
-            }, i*10)
-        }
-    }
+    const visualizeShortestPath = (shortestPathNodes) => {
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index >= shortestPathNodes.length) {
+                clearInterval(interval);
+                return;
+            }
+            if (shortestPathNodes[index]) { 
+                setpath(prevPath => [...prevPath, shortestPathNodes[index]]);
+            }
+            index++;
+        }, 50);
+    };
 
-    const visualizePath = () =>{
-        for(let i=0; i<=visited.length; i++)
-        {
-            if(i===visited.length)
-            {
-                
-                setTimeout(() => {
-                    visualizeShortestPath(path)
-                    }, 20 * i);
-                
-            }
-            else{
-                setTimeout(()=>{
-                    let node = visited[i];
-                    document.getElementById(`node-${node.y}-${node.x}`).className = "node node-visited"
-                    }, 20 * i)
-            }
-        }
-    }
+    const visualizePath = () => {
+        if (!grid.length) return;
     
-    console.log(path);
+        const startNode = grid[NODE_START_Y][NODE_START_X];
+        const endNode = grid[NODE_END_Y][NODE_END_X];
+        let pathResult = Astar(startNode, endNode);
+
+        console.log(`pathResult path: ${pathResult.path}`)
+        console.log(`pathResult visited: ${pathResult.visited}`)
+    
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index >= pathResult.visited.length) {
+                clearInterval(interval);
+                visualizeShortestPath(pathResult.path);
+                return;
+            }
+            if (pathResult.visited[index]) {
+                setvisited(prevVisited => [...prevVisited, pathResult.visited[index]]);
+            }
+            index++;
+        }, 20);
+    };
+    
+    console.log(`Path: ${path}`);
+    console.log(`Visited: ${visited}`);
     return(
-        <div className="grid-wrapper">
-            <button onClick = {visualizePath}>visualize path</button>
-            <h1>Pathfinding Visualizer</h1>
-            {GridWithNode}           
+        <div className="path-find-container">
+            <Header onVisualizePath={visualizePath} onResetGrid={createGrid}></Header>
+            <div className="grid-wrapper">
+                {GridWithNode}           
+            </div>
         </div>
+
         
     )
 

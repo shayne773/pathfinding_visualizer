@@ -5,16 +5,16 @@
 
 }
 
-.isWall {
-    background-color: deeppink;
+.node.isWall { 
+  background-color: deeppink; 
 }
 
 .node-start {
-    background-color: aqua;
+    background-color: rgb(48, 192, 103);
 }
 
 .node-end {
-    background-color: coral;
+    background-color: rgb(228, 9, 9);
 }
 
 .node-visited {
@@ -81,3 +81,12 @@
       background-color: aquamarine;
     }
   }
+
+
+.node-end.node-visited {
+    background-color: red !important;
+}
+
+.node-start.node-shortest-path {
+  background-color: rgb(48, 192, 103) !important;
+}
