@@ -1,7 +1,7 @@
 import React from "react";
 import "./Header.css";
 
-const Header = ({onVisualizePath, onAddWeights, onSelectAlgorithm, onResetGrid }) => {
+const Header = ({onVisualizePath, onAddWeights, onSelectAlgorithm, onResetGrid, onRandomize}) => {
   return (
     <div className="header">
       <h1 >Pathfinding Visualizer</h1>
@@ -18,6 +18,7 @@ const Header = ({onVisualizePath, onAddWeights, onSelectAlgorithm, onResetGrid }
           <option value="dfs">Depth-First Search</option>
         </select>
         <button onClick={onResetGrid}>Reset Grid</button>
+        <button onClick={onRandomize}>Randomize Grid</button>
       </div>
     </div>
   );

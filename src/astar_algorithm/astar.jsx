@@ -28,11 +28,12 @@ function Astar(startNode, endNode){
                 path.push(temp);
                 temp = temp.parent;
             }
+            path = path.reverse()
             return {path, visited};
 
         }
         
-        open = open.filter(elt => elt!==current);
+        open.splice(leastIndex, 1);
         closed.push(current);
         
         let neighbors = current.neighbors;
