@@ -45,7 +45,7 @@ function Astar(startNode, endNode){
 
             if(!closed.includes(neighbor) && !neighbor.isWall)
             {
-                let tentative_gscore = current.g + 1;
+                let tentative_gscore = current.g + neighbor.weight;
                 
                 if(open.includes(neighbor))
                 {

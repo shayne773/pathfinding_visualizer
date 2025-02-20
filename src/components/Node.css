@@ -5,8 +5,16 @@
 
 }
 
-.node.isWall { 
-  background-color: deeppink; 
+.node.isWall {
+  animation-name: addWall;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  background-color: rgb(8, 21, 119); 
 }
 
 .node-start {
@@ -17,6 +25,7 @@
     background-color: rgb(228, 9, 9);
 }
 
+
 .node-visited {
     animation-name: visitedAnimation;
     animation-duration: 1.5s;
@@ -26,59 +35,82 @@
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-  }
+}
+
+  
+
   
   @keyframes visitedAnimation {
     0% {
       transform: scale(0.3);
-      background-color: rgba(0, 0, 66, 0.75);
+      background-color: rgba(212, 136, 89, 0.886);
       border-radius: 10%;
     }
   
     50% {
-      background-color: peachpuff;
+      background-color: rgb(184, 146, 103);
     }
   
     75% {
       transform: scale(1.2);
-      background-color: peachpuff;
+      background-color: rgb(195, 175, 49);
     }
   
     100% {
       transform: scale(1);
-      background-color: peachpuff;
+      background-color: rgb(226, 242, 1);
     }
   }
   
   .node-wall {
-    background-color: rgb(12, 53, 71);
+    background-color: rgb(17, 22, 50);
   }
+
   
-  .node-shortest-path {
-    animation-name: shortestPath;
-    animation-duration: 1.5s;
-    animation-timing-function: ease-out;
-    animation-delay: 0;
-    animation-direction: alternate;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    animation-play-state: running;
-  }
+.node-shortest-path {
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+  
   
   @keyframes shortestPath {
     0% {
       transform: scale(0.6);
-      background-color: aquamarine;
+      background-color: rgb(17, 114, 183);
     }
   
     50% {
       transform: scale(1.2);
-      background-color: aquamarine;
+      background-color: rgb(86, 149, 67);
     }
   
     100% {
       transform: scale(1);
-      background-color: aquamarine;
+      background-color: rgb(0, 197, 131);
+    }
+  }
+
+
+  @keyframes addWall {
+    0% {
+      transform: scale(0.6);
+      background-color: rgb(17, 114, 183);
+    }
+  
+    50% {
+      transform: scale(1.2);
+      background-color:  rgb(4, 24, 173);
+    }
+  
+    100% {
+      transform: scale(1);
+      background-color: rgb(8, 21, 119);
     }
   }
 
@@ -87,6 +119,14 @@
     background-color: red !important;
 }
 
+.node-end.node-shortest-path {
+  background-color: red !important;
+}
+
 .node-start.node-shortest-path {
+  background-color: rgb(48, 192, 103) !important;
+}
+
+.node-start.node-visited {
   background-color: rgb(48, 192, 103) !important;
 }
