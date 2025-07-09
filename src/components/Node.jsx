@@ -8,9 +8,9 @@ const Node = ({ isStart, isEnd, row, col, isWall, isVisited, isPath, onMouseDown
         node
         ${isStart ? "node-start" : ""}
         ${isEnd ? "node-end" : ""}
-        ${isWall ? "isWall" : ""}
-        ${isVisited ? "node-visited" : ""}
-        ${isPath ? "node-shortest-path" : ""}
+        ${isWall ? !isStart && !isEnd ? "isWall" : "" : ""}
+        ${isVisited && !isStart && !isEnd ? "node-visited" : ""}
+        ${isPath && !isStart && !isEnd ? "node-shortest-path" : ""}
         ${weight > 1 ? "node-weight" : ""}
     `.trim();
 

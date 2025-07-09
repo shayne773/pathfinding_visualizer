@@ -3,7 +3,6 @@ import "./PathFind.css";
 import Node from "./Node.jsx";
 import Astar from "../astar_algorithm/astar";
 import Header from "./Header.jsx"
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const rows = 20;
 const cols = 35;
@@ -26,6 +25,7 @@ const PathFind = () =>{
     const [endY, setEndY] = useState(rows-1);
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
+    const [lastToggledCell, setLastToggledCell] = useState(null); //make sure that the same cell is not toggled multiple times in a row (only toggle after leaving the cell)
 
     useEffect(()=>{createGrid();}, []);
 
@@ -123,6 +123,7 @@ const PathFind = () =>{
 
     
     const newGridWithStartToggle = (grid, row, col, oldStartX, oldStartY) => {
+        
         const newGrid = grid.map(innerRow => 
             innerRow.map(node => ({
                 ...node,
@@ -138,7 +139,7 @@ const PathFind = () =>{
     
         const oldStartNode = newGrid[oldStartY][oldStartX];
         const oldNode = newGrid[row][col];
-    
+        
         // Update new start node
         const newNode = { 
             ...oldNode, 
@@ -210,19 +211,27 @@ const PathFind = () =>{
         let newGrid = null
         if(grid[row][col].isEnd){
             setIsMoveEnd(true);
+            newGrid = newGridWithEndToggle(grid, row, col, endX, endY);
+            setgrid(newGrid);
+            visualizePathInstant(grid, startY, startX, row, col);
             return;
         }
         else if(grid[row][col].isStart){
             setIsMoveStart(true);
+            newGrid = newGridWithStartToggle(grid, row, col, startX, startY);
+            setgrid(newGrid);
+            visualizePathInstant(grid, row, col, endY, endX);
             return;
         }
         else if(isAddWalls){
             newGrid = newGridWithWallToggle(grid, row, col);
             setgrid(newGrid)
+            return;
         }
         else if(isAddWeights){
             newGrid = newGridWithWeightsToggle(grid, row, col);
             setgrid(newGrid)
+            return;
         }
         
     }
@@ -230,16 +239,21 @@ const PathFind = () =>{
     const handleMouseEnter = (row, col) => {
         if(mouseIsPressed) {
             let newGrid = null
+            
+            // Prevent toggling the same cell multiple times in a row
+            if (lastToggledCell && lastToggledCell.row === row && lastToggledCell.col === col) return;
+            setLastToggledCell({ row, col });
+
             if(isMoveEnd && !grid[row][col].isWall){
                 newGrid = newGridWithEndToggle(grid, row, col, endX, endY);
                 setgrid(newGrid);
-                visualizePathInstant(newGrid);
+                visualizePathInstant(grid, row, col, startY, startX);
                 return;
             }
             else if(isMoveStart && !grid[row][col].isWall){
                 newGrid = newGridWithStartToggle(grid, row, col, startX, startY);
                 setgrid(newGrid);
-                visualizePathInstant(newGrid);
+                visualizePathInstant(grid, row, col, endY, endX);
                 return;
                 
             }  
@@ -311,12 +325,27 @@ const PathFind = () =>{
         }, 40);
     };
 
+    const clearParents = (grid) => {
+        for (let row of grid) {
+            for (let node of row) {
+                node.parent = null;
+                node.g = 0;
+                node.h = 0;
+                node.f = 0;
+            }
+        }
+    }
+
     const visualizePath = () => {
         if (!grid.length) return;
-
+        
+        setvisited([]);
+        setpath([]);
+        clearParents(grid);
         const startNode = grid[startY][startX];
         const endNode = grid[endY][endX];
         let pathResult = Astar(startNode, endNode);
+        console.log(pathResult);
     
         let index = 0;
         const interval = setInterval(() => {
@@ -333,13 +362,14 @@ const PathFind = () =>{
     };
     
     
-    const visualizePathInstant = (grid) => {
+    const visualizePathInstant = (grid, startRow, startCol, endRow, endCol) => {
 
         if (!grid.length) return;
         setvisited([])
         setpath([])
-        const startNode = grid[startY][startX];
-        const endNode = grid[endY][endX];
+        clearParents(grid);
+        const startNode = grid[startRow][startCol];
+        const endNode = grid[endRow][endCol];
         let pathResult = Astar(startNode, endNode);
         setvisited(pathResult.visited);
         setpath(pathResult.path);
@@ -372,7 +402,7 @@ const PathFind = () =>{
         <div className="path-find-container">
             <Header onVisualizePath={visualizePath} onResetGrid={resetHandler} grid={grid} onRandomize={randomizeHandler} onAddWeights={addWeightsHandler} onAddWalls={addWallsHandler}></Header>
             <div className="grid-wrapper">
-                {GridWithNode}           
+                {GridWithNode}
             </div>
         </div>
 

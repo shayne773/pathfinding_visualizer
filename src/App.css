@@ -1,9 +1,1 @@
-.app-container {
-    display: flex;
-    flex-direction: column;  /* Stack Header and PathFind vertically */
-    justify-content: center; /* Center items vertically */
-    align-items: center;  /* Center items horizontally */
-    min-height: 100vh;  /* Make the container take the full viewport height */
-    text-align: center;  /* Ensure text is centered */
-    background-color: #f4f4f4; /* Optional: Set a background color */
-  }
+
