@@ -25,3 +25,8 @@ select {
     margin-bottom: 100px;
     background-color: dimgrey;
 }
+
+.selected {
+    background-color: #8329c4;
+    color: white;
+}

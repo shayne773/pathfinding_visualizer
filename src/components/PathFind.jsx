@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from "react";
 import "./PathFind.css";
 import Node from "./Node.jsx";
-import Astar from "../astar_algorithm/astar";
+import Astar from "../algorithms/astar";
 import Header from "./Header.jsx"
+import Bfs from "../algorithms/bfs";
+import Dijkstra from "../algorithms/dijkstra";
+import Dfs from "../algorithms/dfs";
 
 const rows = 20;
 const cols = 35;
@@ -26,6 +29,8 @@ const PathFind = () =>{
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
     const [lastToggledCell, setLastToggledCell] = useState(null); //make sure that the same cell is not toggled multiple times in a row (only toggle after leaving the cell)
+    const [algorithm, setAlgorithm] = useState("a-star"); //default algorithm is A*
+    const [selectedMode, setSelectedMode] = useState("");
 
     useEffect(()=>{createGrid();}, []);
 
@@ -341,12 +346,17 @@ const PathFind = () =>{
         
         setvisited([]);
         setpath([]);
+        setSelectedMode("visualize");
         clearParents(grid);
         const startNode = grid[startY][startX];
         const endNode = grid[endY][endX];
-        let pathResult = Astar(startNode, endNode);
-        console.log(pathResult);
-    
+
+        let pathResult = null;
+        if(algorithm === "bfs") pathResult = Bfs(startNode, endNode);
+        else if(algorithm === "a-star") pathResult = Astar(startNode, endNode);
+        else if(algorithm === "dijkstra") pathResult = Dijkstra(startNode, endNode);
+        else if(algorithm === "dfs") pathResult = Dfs(startNode, endNode);
+
         let index = 0;
         const interval = setInterval(() => {
             if (index >= pathResult.visited.length) {
@@ -370,7 +380,14 @@ const PathFind = () =>{
         clearParents(grid);
         const startNode = grid[startRow][startCol];
         const endNode = grid[endRow][endCol];
-        let pathResult = Astar(startNode, endNode);
+        
+        let pathResult = null;
+
+        if(algorithm === "bfs") pathResult = Bfs(startNode, endNode);
+        else if(algorithm === "a-star") pathResult = Astar(startNode, endNode);
+        else if(algorithm === "dijkstra") pathResult = Dijkstra(startNode, endNode);
+        else if(algorithm === "dfs") pathResult = Dfs(startNode, endNode);
+
         setvisited(pathResult.visited);
         setpath(pathResult.path);
 
@@ -378,10 +395,12 @@ const PathFind = () =>{
     
     const randomizeHandler = () =>{
         createGrid(0.2);
+        setSelectedMode("randomize");
     }
 
     const resetHandler = () => {
         createGrid(0);
+        setSelectedMode("reset");
     }
 
     const addWeightsHandler = () => {
@@ -389,6 +408,7 @@ const PathFind = () =>{
         setIsMoveStart(false)
         setIsAddWalls(false)
         setIsMoveEnd(false)
+        setSelectedMode("add-weight");
     }
 
     const addWallsHandler = () => {
@@ -396,11 +416,25 @@ const PathFind = () =>{
         setIsAddWeights(false)
         setIsMoveStart(false)
         setIsMoveEnd(false)
+        setSelectedMode("add-wall");
+    }
+
+    const selectAlgorithmHandler = (algorithm) => {
+        setAlgorithm(algorithm);
+        if(algorithm === "bfs") {
+            console.log("BFS selected");
+        } else if(algorithm === "a-star") {
+            console.log("A* selected");
+        } else if(algorithm === "dijkstra") {
+            console.log("Dijkstra selected");
+        } else {
+            console.log("Unknown algorithm selected");
+        }
     }
 
     return(
         <div className="path-find-container">
-            <Header onVisualizePath={visualizePath} onResetGrid={resetHandler} grid={grid} onRandomize={randomizeHandler} onAddWeights={addWeightsHandler} onAddWalls={addWallsHandler}></Header>
+            <Header onVisualizePath={visualizePath} onResetGrid={resetHandler} grid={grid} onRandomize={randomizeHandler} onAddWeights={addWeightsHandler} onAddWalls={addWallsHandler} onSelectAlgorithm={selectAlgorithmHandler} selectedMode={selectedMode}></Header>
             <div className="grid-wrapper">
                 {GridWithNode}
             </div>
