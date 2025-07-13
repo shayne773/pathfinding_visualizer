@@ -18,10 +18,9 @@
   display: flex;
   flex-direction: column; /* Ensures elements stack vertically */
   /*justify-content: center; /* Centers vertically */
-  align-items: center; /* Centers horizontally */
+  align-items: flex-start; /* Centers horizontally */
   width: 100%;
   height: 100vh; /* Full viewport height */
-  text-align: center;
 }
 
 .app-container {

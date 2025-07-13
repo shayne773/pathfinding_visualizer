@@ -6,6 +6,8 @@ import Header from "./Header.jsx"
 import Bfs from "../algorithms/bfs";
 import Dijkstra from "../algorithms/dijkstra";
 import Dfs from "../algorithms/dfs";
+import { FaGear } from 'react-icons/fa6';
+import Sidebar from "./Sidebar.jsx";
 
 const rows = 20;
 const cols = 35;
@@ -31,6 +33,14 @@ const PathFind = () =>{
     const [lastToggledCell, setLastToggledCell] = useState(null); //make sure that the same cell is not toggled multiple times in a row (only toggle after leaving the cell)
     const [algorithm, setAlgorithm] = useState("a-star"); //default algorithm is A*
     const [selectedMode, setSelectedMode] = useState("");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [colors, setColors] = useState({
+        start: "#00ff00",
+        end: "#ff0000",
+        wall: "#000000",
+        path: "#ffff00",
+        visited: "#87ceeb"
+    });
 
     useEffect(()=>{createGrid();}, []);
 
@@ -307,6 +317,7 @@ const PathFind = () =>{
                                     onMouseEnter = {handleMouseEnter}
                                     onMouseUp = {handleMouseUp}
                                     grid = {grid}
+                                    colors = {colors}
                                 />
                             );
                         })}
@@ -432,8 +443,14 @@ const PathFind = () =>{
         }
     }
 
+    const settingsIconHandler = () => {
+        setSidebarOpen(true);
+    }
+
     return(
         <div className="path-find-container">
+            <FaGear className="settings-icon" onClick={settingsIconHandler}/>
+            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setColors={setColors}></Sidebar>
             <Header onVisualizePath={visualizePath} onResetGrid={resetHandler} grid={grid} onRandomize={randomizeHandler} onAddWeights={addWeightsHandler} onAddWalls={addWallsHandler} onSelectAlgorithm={selectAlgorithmHandler} selectedMode={selectedMode}></Header>
             <div className="grid-wrapper">
                 {GridWithNode}

@@ -2,7 +2,9 @@
     width: 40px;
     height: 40px;
     border: 1px solid white;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .node.isWall {
