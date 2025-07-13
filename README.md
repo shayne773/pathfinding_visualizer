@@ -2,6 +2,7 @@
 
 A web-based visualizer for popular pathfinding algorithms like **A\***, **Dijkstra**, **BFS**, and **DFS**. Built with **React**, this tool lets you interactively explore how different algorithms find paths between two points on a grid.
 
+![Demo](./project-demo-screenshot.png)
 ---
 
 ## ✨ Features
